@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
 public class GetDetailsEmployeeQuery {
     private String employeeId;
 }

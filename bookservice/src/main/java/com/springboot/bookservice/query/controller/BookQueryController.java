@@ -34,7 +34,7 @@ public class BookQueryController {
 
     @GetMapping("/{bookId}")
     public BookResponseCommonModel getBooks(@PathVariable String bookId) {
-        GetDetailsBookQuery getBooksQuery = new GetDetailsBookQuery();
+        GetDetailsBookQuery getBooksQuery = new GetDetailsBookQuery(bookId);
         getBooksQuery.setBookId(bookId);
         BookResponseCommonModel bookResponseModel =
                 queryGateway.query(getBooksQuery,

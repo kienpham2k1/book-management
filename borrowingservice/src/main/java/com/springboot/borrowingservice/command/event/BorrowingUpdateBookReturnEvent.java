@@ -1,4 +1,4 @@
-package com.springboot.borrowingservice.query.model;
+package com.springboot.borrowingservice.command.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,12 +11,10 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BorrowingResponseModel {
+public class BorrowingUpdateBookReturnEvent {
     private String id;
     private String bookId;
     private String employeeId;
     private Date borrowingDate;
     private Date returnDate;
-    private String nameBook;
-    private String nameEmployee;
 }

@@ -28,4 +28,9 @@ public class BorrowServiceImpl implements BorrowService {
         });
         return list;
     }
+
+    public String findIdBorrowing(String employeeId, String bookId) {
+
+        return borrowingRepository.findByEmployeeIdAndBookIdAndReturnDateIsNull(employeeId, bookId).getId();
+    }
 }

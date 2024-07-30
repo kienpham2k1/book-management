@@ -6,10 +6,7 @@ import com.springboot.borrowingservice.query.queries.GetListBorrowingByEmployeeQ
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,9 +23,9 @@ public class BorrowingBookQueryController {
         return list;
     }
 
-    @GetMapping("/{borrowingId}")
-    public List<BorrowingResponseModel> getAllByEmployeeId(@PathVariable String borrowingId) {
-        GetListBorrowingByEmployeeQuery getListBorrowingByEmployeeQuery = new GetListBorrowingByEmployeeQuery(borrowingId);
+    @GetMapping("/getByEmployeeId")
+    public List<BorrowingResponseModel> getAllByEmployeeId(@RequestParam String employeeId) {
+        GetListBorrowingByEmployeeQuery getListBorrowingByEmployeeQuery = new GetListBorrowingByEmployeeQuery(employeeId);
         List<BorrowingResponseModel> list = queryGateway.query(getListBorrowingByEmployeeQuery, ResponseTypes.multipleInstancesOf(BorrowingResponseModel.class)).join();
         return list;
     }

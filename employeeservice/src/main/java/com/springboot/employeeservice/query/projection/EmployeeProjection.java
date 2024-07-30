@@ -1,5 +1,7 @@
 package com.springboot.employeeservice.query.projection;
 
+import com.springboot.commonservice.model.EmployeeResponseCommonModel;
+import com.springboot.commonservice.query.GetDetailsEmployeeQuery;
 import com.springboot.employeeservice.command.data.Employee;
 import com.springboot.employeeservice.command.data.EmployeeRepository;
 import com.springboot.employeeservice.query.model.EmployeeResponseModel;
@@ -36,5 +38,13 @@ public class EmployeeProjection {
             listModel.add(model);
         });
         return listModel;
+    }
+
+    @QueryHandler
+    public EmployeeResponseCommonModel handle(GetDetailsEmployeeQuery getEmployeeQuery) {
+        EmployeeResponseCommonModel model = new EmployeeResponseCommonModel();
+        Employee employee = employeeRepository.getById(getEmployeeQuery.getEmployeeId());
+        BeanUtils.copyProperties(employee, model);
+        return model;
     }
 }

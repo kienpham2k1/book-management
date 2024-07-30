@@ -1,9 +1,10 @@
-package com.springboot.borrowingservice.query.model;
+package com.springboot.borrowingservice.command.command;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 import java.util.Date;
 
@@ -11,12 +12,10 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BorrowingResponseModel {
+public class UpdateBookReturnCommand {
+    @TargetAggregateIdentifier
     private String id;
     private String bookId;
-    private String employeeId;
-    private Date borrowingDate;
+    private String employee;
     private Date returnDate;
-    private String nameBook;
-    private String nameEmployee;
 }

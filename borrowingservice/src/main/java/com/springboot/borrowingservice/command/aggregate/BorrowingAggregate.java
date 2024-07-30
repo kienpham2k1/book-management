@@ -2,14 +2,13 @@ package com.springboot.borrowingservice.command.aggregate;
 
 import com.springboot.borrowingservice.command.command.CreateBorrowCommand;
 import com.springboot.borrowingservice.command.command.DeleteBorrowCommand;
+import com.springboot.borrowingservice.command.command.UpdateBookReturnCommand;
 import com.springboot.borrowingservice.command.command.UpdateBorrowCommand;
 import com.springboot.borrowingservice.command.event.BorrowCreatedEvent;
 import com.springboot.borrowingservice.command.event.BorrowDeletedEvent;
 import com.springboot.borrowingservice.command.event.BorrowUpdatedEvent;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import com.springboot.borrowingservice.command.event.BorrowingUpdateBookReturnEvent;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
@@ -70,5 +69,18 @@ public class BorrowingAggregate {
     @EventSourcingHandler
     public void on(BorrowDeletedEvent event) {
         this.id = event.getId();
+    }
+
+    @CommandHandler
+    public void handle(UpdateBookReturnCommand command) {
+        BorrowingUpdateBookReturnEvent event = new BorrowingUpdateBookReturnEvent();
+        BeanUtils.copyProperties(command, event);
+        AggregateLifecycle.apply(event);
+    }
+
+    @EventSourcingHandler
+    public void on(BorrowingUpdateBookReturnEvent event) {
+        this.id = event.getId();
+        this.returnDate = event.getReturnDate();
     }
 }

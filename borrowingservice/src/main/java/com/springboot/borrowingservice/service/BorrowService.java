@@ -7,4 +7,5 @@ import java.util.List;
 public interface BorrowService {
     void createBorrowBook();
     List<BorrowingResponseModel> getAll();
+    String findIdBorrowing(String employeeId, String bookId);
 }

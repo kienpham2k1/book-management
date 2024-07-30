@@ -1,7 +1,9 @@
 package com.springboot.borrowingservice.command.controller;
 
 import com.springboot.borrowingservice.command.command.CreateBorrowCommand;
+import com.springboot.borrowingservice.command.command.UpdateBookReturnCommand;
 import com.springboot.borrowingservice.command.model.BorrowRequestModel;
+import com.springboot.borrowingservice.service.BorrowService;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,8 @@ import java.util.UUID;
 public class BorrowingCommandController {
     @Autowired
     private CommandGateway commandGateway;
+    @Autowired
+    private BorrowService borrowService;
 
     @PostMapping
     public String addBookBorrowing(@RequestBody BorrowRequestModel model) {
@@ -28,10 +32,11 @@ public class BorrowingCommandController {
 
         return "Book borrowing added";
     }
-//    @PutMapping
-//    public String updateBookReturn(@RequestBody BorrowRequestModel model) {
-//        UpdateBookReturnCommand command = new UpdateBookReturnCommand(borrowService.findIdBorrowing(model.getEmployeeId(), model.getBookId()), model.getBookId(),model.getEmployeeId(),new Date());
-//        commandGateway.sendAndWait(command);
-//        return "Book returned";
-//    }
+    @PutMapping
+    public String updateBookReturn(@RequestBody BorrowRequestModel model) {
+        UpdateBookReturnCommand command =
+                new UpdateBookReturnCommand(borrowService.findIdBorrowing(model.getEmployeeId(), model.getBookId()), model.getBookId(),model.getEmployeeId(),new Date());
+        commandGateway.sendAndWait(command);
+        return "Book returned";
+    }
 }
