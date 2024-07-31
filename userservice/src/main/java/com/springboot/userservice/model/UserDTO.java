@@ -16,7 +16,8 @@ public class UserDTO {
     private String token;
     private String refreshtoken;
 
-    public static UserDTO entityToDTO(User user) {
+
+    public static UserDTO entityToDTO(User user){
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
         userDTO.setPassword(user.getPassword());
@@ -24,8 +25,7 @@ public class UserDTO {
         userDTO.setEmployeeId(user.getEmployeeId());
         return userDTO;
     }
-
-    public static User dtoToEntity(UserDTO dto) {
+    public static User dtoToEntity(UserDTO dto){
         User user = new User();
         user.setId(dto.getId());
         user.setPassword(dto.getPassword());
