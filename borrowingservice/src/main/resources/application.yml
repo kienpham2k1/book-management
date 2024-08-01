@@ -19,3 +19,12 @@ spring:
   h2:
     console:
       enabled: true
+resilience4j:
+  circuitbreaker:
+    instances:
+      commandGateway:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10000
+        permittedNumberOfCallsInHalfOpenState: 3

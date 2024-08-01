@@ -10,11 +10,14 @@ import com.springboot.commonservice.model.BookResponseCommonModel;
 import com.springboot.commonservice.model.EmployeeResponseCommonModel;
 import com.springboot.commonservice.query.GetDetailsBookQuery;
 import com.springboot.commonservice.query.GetDetailsEmployeeQuery;
+import io.github.resilience4j.circuitbreaker.CircuitBreaker;
+import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
 import org.axonframework.queryhandling.QueryHandler;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -28,6 +31,8 @@ public class BorrowingProjection {
     private BorrowService borrowService;
     @Autowired
     private QueryGateway queryGateway;
+    @Autowired
+    private CircuitBreakerFactory circuitBreakerFactory;
 
     @QueryHandler
     public List<BorrowingResponseModel> handle(GetAllBorrowing getAllBorrowing) {
@@ -39,9 +44,20 @@ public class BorrowingProjection {
             BookResponseCommonModel bookResponseCommonModel = queryGateway.query(getDetailsBookQuery,
                     ResponseTypes.instanceOf(BookResponseCommonModel.class)).join();
             model.setNameBook(bookResponseCommonModel.getName());
+
             GetDetailsEmployeeQuery getDetailsEmployeeQuery = new GetDetailsEmployeeQuery(e.getEmployeeId());
-            EmployeeResponseCommonModel employeeResponseCommonModel = queryGateway.query(getDetailsEmployeeQuery,
-                    ResponseTypes.instanceOf(EmployeeResponseCommonModel.class)).join();
+            EmployeeResponseCommonModel employeeResponseCommonModel = circuitBreakerFactory.create("getDetailsEmployeeQuery").run(
+                    () -> {
+                        EmployeeResponseCommonModel m = queryGateway.query(getDetailsEmployeeQuery, ResponseTypes.instanceOf(EmployeeResponseCommonModel.class)).join();
+                        return m;
+                    },
+                    t -> {
+                        EmployeeResponseCommonModel m = new EmployeeResponseCommonModel();
+                        m.setFirstName("Anonymous");
+                        m.setLastName("Employee");
+                        return m;
+                    }
+            );
             model.setNameEmployee(employeeResponseCommonModel.getFirstName().concat(" " + employeeResponseCommonModel.getLastName()));
 
             list.add(model);
