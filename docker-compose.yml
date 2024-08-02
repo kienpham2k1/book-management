@@ -1,0 +1,22 @@
+services:
+  axoniq:
+    image: axoniq/axonserver
+    container_name: axoniq-server
+    ports:
+      - "8024:8024"
+      - "8124:8124"
+    environment:
+      - AXONIQ_AXONSERVER_NAME=axonserver
+      - AXONIQ_AXONSERVER_HOSTNAME=axonserver
+      - AXONIQ_AXONSERVER_DEVMODE=true
+    volumes:
+      - axonserver-data:/data
+
+  kafka:
+    image: apache/kafka
+    container_name: kafka
+    ports:
+      - "9092:9092"
+
+volumes:
+  axonserver-data:
