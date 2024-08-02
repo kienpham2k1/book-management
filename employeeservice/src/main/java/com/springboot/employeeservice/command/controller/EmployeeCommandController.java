@@ -6,6 +6,8 @@ import com.springboot.employeeservice.command.command.CreateEmployeeCommand;
 import com.springboot.employeeservice.command.command.DeleteEmployeeCommand;
 import com.springboot.employeeservice.command.command.UpdateEmployeeCommand;
 import com.springboot.employeeservice.command.model.EmployeeRequestModel;
+import com.springboot.employeeservice.kafka.KafkaProducer;
+import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
@@ -14,16 +16,17 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.cloud.stream.messaging.Source;
+
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/employees")
-@EnableBinding(Source.class)
+@Slf4j
 public class EmployeeCommandController {
     @Autowired
     CommandGateway commandGateway;
     @Autowired
-    private MessageChannel output;
+    private KafkaProducer kafkaProducer;
 
     @PostMapping
     public void addEmployee(@RequestBody EmployeeRequestModel model) {
@@ -45,14 +48,7 @@ public class EmployeeCommandController {
 
     @PostMapping("/sendMessage")
     public void SendMessage(@RequestBody String message) {
-        try {
-
-            ObjectMapper mapper = new ObjectMapper();
-            String json = mapper.writeValueAsString(message);
-            output.send(MessageBuilder.withPayload(json).build());
-        } catch (JsonProcessingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        log.info("Kafka send message: {} ", message);
+        kafkaProducer.sendMessage(message);
     }
 }

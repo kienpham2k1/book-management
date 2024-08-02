@@ -12,15 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @SpringBootApplication
-@RestController
-@EnableBinding(Sink.class)
 public class NotificationserviceApplication {
-    @StreamListener(Sink.INPUT)
-    public void consumeMessage(Message message) {
-
-        System.out.println("Message, " + message);
-    }
-
     public static void main(String[] args) {
         SpringApplication.run(NotificationserviceApplication.class, args);
     }
